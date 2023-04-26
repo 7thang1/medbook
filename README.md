@@ -1,6 +1,6 @@
 # medbook
 
-The Medical Booking app - with this app. You can schedule for medical appointment
+The Medical Booking app - with this app you can easy to scheduling a medical appointment
 
 ## Getting Started
 
