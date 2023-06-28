@@ -3,6 +3,7 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:medbook/Screens/newinfo.dart';
+import 'package:medbook/Screens/patientlist.dart';
 import 'package:medbook/navbar.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
@@ -96,12 +97,12 @@ class _HomeState extends State<Home> {
               ],
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 20),
+              padding: const EdgeInsets.only(top: 20, left: 10, right: 10),
               child: SizedBox(
                 width: double.infinity,
                 height: 50,
                 child: ElevatedButton(
-                  onPressed: onBookingPressed,
+                  onPressed: _showBookingOptions,
                   style: ElevatedButton.styleFrom(
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10))),
@@ -143,8 +144,59 @@ class _HomeState extends State<Home> {
     ).then((value) => value ?? false);
   }
 
-  void onBookingPressed() {
-    Navigator.push(
+  Future<void> _showBookingOptions() async {
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () => onalready(context),
+                  child: Text('Đã có hồ sơ'),
+                ),
+              ),
+              Container(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () => oncreatenew(context),
+                  child: Text('Tạo hồ sơ mới'),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void onalready(BuildContext context) {
+    Navigator.pushReplacement(
+      context,
+      PageRouteBuilder(
+        transitionDuration: Duration(milliseconds: 500),
+        transitionsBuilder: (BuildContext context, Animation<double> animation,
+            Animation<double> secondaryAnimation, Widget child) {
+          return SharedAxisTransition(
+            animation: animation,
+            secondaryAnimation: secondaryAnimation,
+            transitionType: SharedAxisTransitionType.scaled,
+            child: child,
+          );
+        },
+        pageBuilder: (BuildContext context, Animation<double> animation,
+            Animation<double> secondaryAnimation) {
+          return ListInfo();
+        },
+      ),
+    );
+  }
+
+  void oncreatenew(BuildContext context) {
+    Navigator.pushReplacement(
       context,
       PageRouteBuilder(
         transitionDuration: Duration(milliseconds: 500),

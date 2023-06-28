@@ -32,7 +32,10 @@ class _RegisterState extends State<Register> {
                       Container(
                           width: double.infinity,
                           height: 100,
-                          padding: EdgeInsets.only(left: 0),
+                          margin: EdgeInsets.only(top: 50),
+                          padding: EdgeInsets.only(
+                            left: 0,
+                          ),
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             color: Colors.white,
@@ -55,24 +58,6 @@ class _RegisterState extends State<Register> {
                         child: TextField(
                           style: TextStyle(fontSize: 18, color: Colors.black),
                           decoration: InputDecoration(
-                            labelText: "HỌ VÀ TÊN",
-                            labelStyle: TextStyle(
-                                color: Colors.blueAccent,
-                                fontSize: 15,
-                                fontWeight: FontWeight.bold),
-                            border: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Color(0xffCED0D2), width: 1),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10))),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 10),
-                        child: TextField(
-                          style: TextStyle(fontSize: 18, color: Colors.black),
-                          decoration: InputDecoration(
                             labelText: "TÀI KHOẢN",
                             labelStyle: TextStyle(
                                 color: Colors.blueAccent,
@@ -86,6 +71,24 @@ class _RegisterState extends State<Register> {
                                   height: 25,
                                   child: Image.asset("assets/user.png")),
                             ),
+                            border: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Color(0xffCED0D2), width: 1),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10))),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10),
+                        child: TextField(
+                          style: TextStyle(fontSize: 18, color: Colors.black),
+                          decoration: InputDecoration(
+                            labelText: "HỌ VÀ TÊN",
+                            labelStyle: TextStyle(
+                                color: Colors.blueAccent,
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold),
                             border: OutlineInputBorder(
                                 borderSide: BorderSide(
                                     color: Color(0xffCED0D2), width: 1),
