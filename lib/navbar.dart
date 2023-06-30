@@ -8,6 +8,7 @@ import 'package:medbook/Screens/home.dart';
 import 'package:medbook/Screens/login.dart';
 import 'package:medbook/Screens/medicalexamination.dart';
 import 'package:medbook/Screens/patientinfo.dart';
+import 'package:medbook/Screens/patientlist.dart';
 import 'package:medbook/Screens/register.dart';
 import 'package:medbook/Screens/setting.dart';
 
@@ -115,19 +116,20 @@ class NavBar extends StatelessWidget {
     Navigator.pushReplacement(
       context,
       PageRouteBuilder(
-        transitionDuration: Duration(milliseconds: 500),
+        transitionDuration: Duration(milliseconds: 300),
         transitionsBuilder: (BuildContext context, Animation<double> animation,
             Animation<double> secondaryAnimation, Widget child) {
-          return SharedAxisTransition(
-            animation: animation,
-            secondaryAnimation: secondaryAnimation,
-            transitionType: SharedAxisTransitionType.scaled,
+          return SlideTransition(
+            position: Tween<Offset>(
+              begin: const Offset(1, 0),
+              end: Offset.zero,
+            ).animate(animation),
             child: child,
           );
         },
         pageBuilder: (BuildContext context, Animation<double> animation,
             Animation<double> secondaryAnimation) {
-          return PatientInfo();
+          return ListInfo();
         },
       ),
     );
@@ -138,13 +140,14 @@ class NavBar extends StatelessWidget {
     Navigator.pushReplacement(
       context,
       PageRouteBuilder(
-        transitionDuration: Duration(milliseconds: 500),
+        transitionDuration: Duration(milliseconds: 300),
         transitionsBuilder: (BuildContext context, Animation<double> animation,
             Animation<double> secondaryAnimation, Widget child) {
-          return SharedAxisTransition(
-            animation: animation,
-            secondaryAnimation: secondaryAnimation,
-            transitionType: SharedAxisTransitionType.scaled,
+          return SlideTransition(
+            position: Tween<Offset>(
+              begin: const Offset(1, 0),
+              end: Offset.zero,
+            ).animate(animation),
             child: child,
           );
         },

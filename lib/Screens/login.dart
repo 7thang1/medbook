@@ -1,8 +1,13 @@
 // ignore_for_file: prefer_const_constructors, unused_import, unnecessary_new, prefer_final_fields
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:http/http.dart';
 import 'package:medbook/Screens/home.dart';
+import 'package:medbook/Service/APIService.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'register.dart';
 import 'resetpassword.dart';
 import 'package:animations/animations.dart';
@@ -14,6 +19,7 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  APIService apiService = APIService();
   bool _showPass = true;
   TextEditingController userName = new TextEditingController();
   TextEditingController userPassword = new TextEditingController();
@@ -21,225 +27,263 @@ class _LoginState extends State<Login> {
   var _passError = "Mật khẩu không hợp lệ";
   var _userInvalid = false;
   var _passInvalid = false;
+  GlobalKey<ScaffoldMessengerState> _scaffoldMessengerKey =
+      new GlobalKey<ScaffoldMessengerState>();
+
+  void showSnackbar(String message, bool isSuccess) {
+    Color snackbarColor = isSuccess ? Colors.green : Colors.red;
+    Image snackbarImage = isSuccess
+        ? Image.asset('assets/checking.png', width: 20, height: 20)
+        : Image.asset('assets/error.png', width: 20, height: 20);
+    final snackBar = SnackBar(
+      backgroundColor: snackbarColor,
+      duration: Duration(milliseconds: 1200),
+      behavior: SnackBarBehavior.floating,
+      content: Row(
+        children: [
+          snackbarImage,
+          SizedBox(width: 8),
+          Text(message),
+        ],
+      ),
+    );
+
+    _scaffoldMessengerKey.currentState?.showSnackBar(snackBar);
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: _onBackPressed,
       child: MaterialApp(
-          home: Scaffold(
-        resizeToAvoidBottomInset: true,
-        body: Container(
-            padding: EdgeInsets.fromLTRB(30, 0, 30, 0),
-            constraints: BoxConstraints.expand(),
-            color: Colors.white,
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Container(
-                      width: double.infinity,
-                      height: 100,
-                      padding: EdgeInsets.only(
-                        left: 5,
-                      ),
-                      margin: EdgeInsets.only(top: 50),
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.white,
-                      ),
-                      child:
-                          Image.asset('assets/LOG7.png', fit: BoxFit.contain)),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 20),
-                    child: Text(
-                      "Chào mừng",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                        fontSize: 50,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 5),
-                    child: Text(
-                      "Đăng nhập vào tài khoản của bạn ",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xff6c7178),
-                        fontSize: 20,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 20),
-                    child: TextField(
-                      style: TextStyle(fontSize: 18, color: Colors.black),
-                      controller: userName,
-                      decoration: InputDecoration(
-                        errorText: _userInvalid ? _userError : null,
-                        labelText: "TÀI KHOẢN",
-                        labelStyle: TextStyle(
-                            color: Colors.blueAccent,
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold),
-                        prefix: Padding(
-                          padding: const EdgeInsets.only(right: 5),
-                          child: Container(
-                              margin: EdgeInsets.only(right: 10, left: 5),
-                              width: 25,
-                              height: 25,
-                              child: Image.asset("assets/user.png")),
+          home: ScaffoldMessenger(
+        key: _scaffoldMessengerKey,
+        child: Scaffold(
+          resizeToAvoidBottomInset: true,
+          body: Container(
+              padding: EdgeInsets.fromLTRB(30, 0, 30, 0),
+              constraints: BoxConstraints.expand(),
+              color: Colors.white,
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Container(
+                        width: double.infinity,
+                        height: 100,
+                        padding: EdgeInsets.only(
+                          left: 5,
                         ),
-                        border: OutlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Color(0xffCED0D2), width: 1),
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10))),
+                        margin: EdgeInsets.only(top: 50),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.white,
+                        ),
+                        child: Image.asset('assets/LOG7.png',
+                            fit: BoxFit.contain)),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 20),
+                      child: Text(
+                        "Chào mừng",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                          fontSize: 50,
+                        ),
                       ),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10),
-                    child: Stack(
-                      alignment: AlignmentDirectional.centerEnd,
-                      children: <Widget>[
-                        TextField(
-                          controller: userPassword,
-                          obscureText: _showPass,
-                          style: TextStyle(fontSize: 18, color: Colors.black),
-                          decoration: InputDecoration(
-                            errorText: _passInvalid ? _passError : null,
-                            labelText: "MẬT KHẨU",
-                            labelStyle: TextStyle(
-                                color: Colors.blueAccent,
-                                fontSize: 15,
-                                fontWeight: FontWeight.bold),
-                            prefix: Padding(
-                              padding: const EdgeInsets.only(right: 5),
-                              child: Container(
+                    Padding(
+                      padding: const EdgeInsets.only(top: 5),
+                      child: Text(
+                        "Đăng nhập vào tài khoản của bạn ",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xff6c7178),
+                          fontSize: 20,
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 20),
+                      child: TextField(
+                        style: TextStyle(fontSize: 18, color: Colors.black),
+                        controller: userName,
+                        decoration: InputDecoration(
+                          errorText: _userInvalid ? _userError : null,
+                          labelText: "TÀI KHOẢN",
+                          labelStyle: TextStyle(
+                              color: Colors.blueAccent,
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold),
+                          prefix: Padding(
+                            padding: const EdgeInsets.only(right: 5),
+                            child: Container(
                                 margin: EdgeInsets.only(right: 10, left: 5),
                                 width: 25,
                                 height: 25,
-                                child: Image.asset("assets/password.png"),
-                              ),
-                            ),
-                            border: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Color(0xffCED0D2), width: 1),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10))),
+                                child: Image.asset("assets/user.png")),
                           ),
-                        ),
-                        GestureDetector(
-                          onTap: onShowPassPressed,
-                          child: Padding(
-                            padding: const EdgeInsets.only(right: 10),
-                            child: Image.asset(
-                              _showPass
-                                  ? "assets/showpass.png"
-                                  : "assets/hidepass.png",
-                              width: 25,
-                              height: 25,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 20),
-                    child: SizedBox(
-                      width: double.infinity,
-                      height: 50,
-                      child: ElevatedButton(
-                        onPressed: onSignInPressed,
-                        style: ElevatedButton.styleFrom(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10))),
-                        child: Text(
-                          "ĐĂNG NHẬP",
-                          style: TextStyle(fontSize: 15),
+                          border: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Color(0xffCED0D2), width: 1),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10))),
                         ),
                       ),
                     ),
-                  ),
-                  SizedBox(
-                    height: 130,
-                    width: double.infinity,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        GestureDetector(
-                          onTap: onSignUpPressed,
-                          child: Text(
-                            "ĐĂNG KÝ MỚI",
-                            style: TextStyle(
-                                fontSize: 15,
-                                color: Colors.blueAccent,
-                                fontWeight: FontWeight.bold),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10),
+                      child: Stack(
+                        alignment: AlignmentDirectional.centerEnd,
+                        children: <Widget>[
+                          TextField(
+                            controller: userPassword,
+                            obscureText: _showPass,
+                            style: TextStyle(fontSize: 18, color: Colors.black),
+                            decoration: InputDecoration(
+                              errorText: _passInvalid ? _passError : null,
+                              labelText: "MẬT KHẨU",
+                              labelStyle: TextStyle(
+                                  color: Colors.blueAccent,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold),
+                              prefix: Padding(
+                                padding: const EdgeInsets.only(right: 5),
+                                child: Container(
+                                  margin: EdgeInsets.only(right: 10, left: 5),
+                                  width: 25,
+                                  height: 25,
+                                  child: Image.asset("assets/password.png"),
+                                ),
+                              ),
+                              border: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Color(0xffCED0D2), width: 1),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10))),
+                            ),
                           ),
-                        ),
-                        GestureDetector(
-                          onTap: onForgotPasswordPressed,
-                          child: Text(
-                            "Quên mật khẩu",
-                            style: TextStyle(
-                                fontSize: 15,
-                                color: Colors.blueAccent,
-                                fontWeight: FontWeight.bold),
+                          GestureDetector(
+                            onTap: onShowPassPressed,
+                            child: Padding(
+                              padding: const EdgeInsets.only(right: 10),
+                              child: Image.asset(
+                                _showPass
+                                    ? "assets/showpass.png"
+                                    : "assets/hidepass.png",
+                                width: 25,
+                                height: 25,
+                              ),
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            )),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 20),
+                      child: SizedBox(
+                        width: double.infinity,
+                        height: 50,
+                        child: ElevatedButton(
+                          onPressed: onSignInPressed,
+                          style: ElevatedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10))),
+                          child: Text(
+                            "ĐĂNG NHẬP",
+                            style: TextStyle(fontSize: 15),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 130,
+                      width: double.infinity,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          GestureDetector(
+                            onTap: onSignUpPressed,
+                            child: Text(
+                              "ĐĂNG KÝ MỚI",
+                              style: TextStyle(
+                                  fontSize: 15,
+                                  color: Colors.blueAccent,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: onForgotPasswordPressed,
+                            child: Text(
+                              "Quên mật khẩu",
+                              style: TextStyle(
+                                  fontSize: 15,
+                                  color: Colors.blueAccent,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              )),
+        ),
       )),
     );
   }
 
-  void onSignInPressed() {
-    setState(() {
-      if (userName.text.length < 6 ||
-          userName.text.length > 20 ||
-          userName.text.contains(" ")) {
-        _userInvalid = true;
+  Future<void> onSignInPressed() async {
+    FocusManager.instance.primaryFocus?.unfocus();
+    if (userName.text.length < 5 ||
+        userName.text.length > 20 ||
+        userName.text.contains(" ")) {
+      _userInvalid = true;
+    } else {
+      _userInvalid = false;
+    }
+    if (userPassword.text.length < 5 || userPassword.text.length > 20) {
+      _passInvalid = true;
+    } else {
+      _passInvalid = false;
+    }
+    if (!_userInvalid && !_passInvalid) {
+      var response =
+          await apiService.loginUser(userName.text, userPassword.text);
+      if (response['success']) {
+        bool state = true;
+        showSnackbar(response['message'], state);
+        Timer(Duration(milliseconds: 1500), () {
+          Navigator.pop(context);
+          Navigator.push(
+            context,
+            PageRouteBuilder(
+              transitionDuration: Duration(milliseconds: 500),
+              transitionsBuilder: (BuildContext context,
+                  Animation<double> animation,
+                  Animation<double> secondaryAnimation,
+                  Widget child) {
+                return SharedAxisTransition(
+                  animation: animation,
+                  secondaryAnimation: secondaryAnimation,
+                  transitionType: SharedAxisTransitionType.scaled,
+                  child: child,
+                );
+              },
+              pageBuilder: (BuildContext context, Animation<double> animation,
+                  Animation<double> secondaryAnimation) {
+                return Home();
+              },
+            ),
+          );
+        });
       } else {
-        _userInvalid = false;
+        bool state = false;
+        showSnackbar(response['message'], state);
       }
-      if (userPassword.text.length < 6 || userPassword.text.length > 20) {
-        _passInvalid = true;
-      } else {
-        _passInvalid = false;
-      }
-      if (!_userInvalid && !_passInvalid) {
-        Navigator.pop(context);
-        Navigator.push(
-          context,
-          PageRouteBuilder(
-            transitionDuration: Duration(milliseconds: 500),
-            transitionsBuilder: (BuildContext context,
-                Animation<double> animation,
-                Animation<double> secondaryAnimation,
-                Widget child) {
-              return SharedAxisTransition(
-                animation: animation,
-                secondaryAnimation: secondaryAnimation,
-                transitionType: SharedAxisTransitionType.scaled,
-                child: child,
-              );
-            },
-            pageBuilder: (BuildContext context, Animation<double> animation,
-                Animation<double> secondaryAnimation) {
-              return Home();
-            },
-          ),
-        );
-      }
-    });
+      ;
+    }
   }
 
   void onForgotPasswordPressed() {

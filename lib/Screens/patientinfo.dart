@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:medbook/Screens/patientlist.dart';
 import 'package:medbook/navbar.dart';
 
 class PatientInfo extends StatefulWidget {
@@ -13,11 +14,14 @@ class _PatientInfoState extends State<PatientInfo> {
       onWillPop: _onBackPressed,
       child: Scaffold(
           appBar: AppBar(
+            leading: BackButton(
+              onPressed: () => {Navigator.pop(context)},
+              color: Colors.white,
+            ),
             title: const Text('Hồ sơ'),
             centerTitle: true,
             backgroundColor: Colors.blue.shade600,
           ),
-          drawer: NavBar(),
           body: Center(
             child: Container(
               child: Text(
