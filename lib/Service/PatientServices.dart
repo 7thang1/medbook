@@ -19,7 +19,7 @@ class PatientServices {
     if (response.statusCode == 200) {
       return compute((parsePatient), response.body);
     } else {
-      throw Exception('Unable to fetch patient from the REST API');
+      throw Exception('Đã xảy ra lỗi');
     }
   }
 }

@@ -2,16 +2,11 @@ import 'dart:async';
 
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:medbook/Screens/List/ethnicity.dart';
 import 'package:medbook/Screens/List/job.dart';
 import 'package:medbook/Screens/patientlist.dart';
 import 'package:medbook/Service/UserManager.dart';
-import 'List/countries.dart';
-import 'List/province.dart';
 import 'package:medbook/Service/UserServices.dart';
-
-import 'home.dart';
 
 class NewPatient extends StatefulWidget {
   const NewPatient({Key? key}) : super(key: key);
@@ -50,19 +45,14 @@ class _NewPatientState extends State<NewPatient> {
   String? selectedMonth;
   String? selectedYear;
   String? selectedGender;
-  String? selectedNationality;
   String? selectedJob;
   String? selectedEthnicity;
-  String? selectedProvince;
   APIService apiService = APIService();
   final userFullName = TextEditingController();
   final userPhone = TextEditingController();
   final userAddress = TextEditingController();
 
   final List<String> gender = ['Male', 'Female', 'Other'];
-  bool isEthnicityDisabled() {
-    return selectedNationality != 'Vietnam' && selectedEthnicity == 'Khác';
-  }
 
   final List<String> days =
       List.generate(31, (index) => (index + 1).toString());
@@ -99,181 +89,179 @@ class _NewPatientState extends State<NewPatient> {
           padding: const EdgeInsets.all(16.0),
           child: SingleChildScrollView(
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
+                // TextField - Họ và tên
                 TextField(
                   controller: userFullName,
                   decoration: InputDecoration(
                     labelText: 'Họ và tên (*)',
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 16.0),
-                  child: Container(
-                    width: double.infinity,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Text('Ngày sinh:'),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 8),
-                          child: DropdownButton<String>(
-                            value: selectedDay,
-                            hint: Text('Ngày'),
-                            onChanged: (String? newValue) {
-                              setState(() {
-                                selectedDay = newValue;
-                                updateSelectedDate();
-                              });
-                            },
-                            items: days
-                                .map<DropdownMenuItem<String>>((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(value),
-                              );
-                            }).toList(),
-                          ),
-                        ),
-                        SizedBox(width: 20),
-                        DropdownButton<String>(
-                          value: selectedMonth,
-                          hint: Text('Tháng'),
-                          onChanged: (String? newValue) {
-                            setState(() {
-                              selectedMonth = newValue;
-                              updateSelectedDate();
-                            });
-                          },
-                          items: months
-                              .map<DropdownMenuItem<String>>((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value),
-                            );
-                          }).toList(),
-                        ),
-                        SizedBox(width: 20),
-                        DropdownButton<String>(
-                          value: selectedYear,
-                          hint: Text('Năm'),
-                          onChanged: (String? newValue) {
-                            setState(() {
-                              selectedYear = newValue;
-                              updateSelectedDate();
-                            });
-                          },
-                          items: years
-                              .map<DropdownMenuItem<String>>((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value),
-                            );
-                          }).toList(),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 16.0),
-                  child: Container(
-                    height: 50,
-                    width: double.infinity,
-                    child: DropdownButton<String>(
-                      value: selectedGender,
-                      isExpanded: true,
-                      hint: Text('Giới tính'),
+                const SizedBox(height: 16.0),
+                // Row - Ngày sinh
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text('Ngày sinh:'),
+                    const SizedBox(width: 8.0),
+                    // DropdownButton - Ngày
+                    DropdownButton<String>(
+                      value: selectedDay,
+                      hint: Text('Ngày'),
                       onChanged: (String? newValue) {
                         setState(() {
-                          selectedGender = newValue;
+                          selectedDay = newValue;
+                          updateSelectedDate();
+                        });
+                      },
+                      items: days.map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                    ),
+                    const SizedBox(width: 20.0),
+                    // DropdownButton - Tháng
+                    DropdownButton<String>(
+                      value: selectedMonth,
+                      hint: Text('Tháng'),
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          selectedMonth = newValue;
+                          updateSelectedDate();
                         });
                       },
                       items:
-                          gender.map<DropdownMenuItem<String>>((String value) {
+                          months.map<DropdownMenuItem<String>>((String value) {
                         return DropdownMenuItem<String>(
                           value: value,
                           child: Text(value),
                         );
                       }).toList(),
                     ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 16.0),
-                  child: Container(
-                    height: 50,
-                    width: double.infinity,
-                    child: DropdownButton<String>(
-                      isExpanded: true,
-                      value: selectedJob,
-                      hint: Text('Nghề nghiệp'),
+                    const SizedBox(width: 20.0),
+                    // DropdownButton - Năm
+                    DropdownButton<String>(
+                      value: selectedYear,
+                      hint: Text('Năm'),
                       onChanged: (String? newValue) {
                         setState(() {
-                          selectedJob = newValue;
+                          selectedYear = newValue;
+                          updateSelectedDate();
                         });
                       },
                       items:
-                          Job.job.map<DropdownMenuItem<String>>((String value) {
+                          years.map<DropdownMenuItem<String>>((String value) {
                         return DropdownMenuItem<String>(
                           value: value,
                           child: Text(value),
                         );
                       }).toList(),
                     ),
-                  ),
+                  ],
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 16.0),
-                  child: Container(
-                    height: 50,
-                    width: double.infinity,
-                    child: DropdownButton<String>(
-                      isExpanded: true,
-                      value: selectedEthnicity,
-                      hint: Text('Dân tộc'),
-                      onChanged: isEthnicityDisabled()
-                          ? null
-                          : (String? newValue) {
-                              setState(() {
-                                selectedEthnicity = newValue;
-                              });
-                            },
-                      items: Ethnicity.ethnicity
-                          .map<DropdownMenuItem<String>>((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
+                const SizedBox(height: 10.0),
+                // DropdownButtonFormField - Giới tính
+                Container(
+                  height: 80.0,
+                  child: DropdownButtonFormField<String>(
+                    decoration: InputDecoration(
+                      labelText: 'Giới tính',
                     ),
+                    value: selectedGender,
+                    isExpanded: true,
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        selectedGender = newValue;
+                      });
+                    },
+                    items: gender.map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
                   ),
                 ),
+                const SizedBox(height: 10.0),
+                // DropdownButtonFormField - Nghề nghiệp
+                Container(
+                  height: 80.0,
+                  child: DropdownButtonFormField<String>(
+                    decoration: InputDecoration(
+                      labelText: 'Nghề nghiệp',
+                    ),
+                    isExpanded: true,
+                    value: selectedJob,
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        selectedJob = newValue;
+                      });
+                    },
+                    items:
+                        Job.job.map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                  ),
+                ),
+                const SizedBox(height: 10.0),
+                // DropdownButtonFormField - Dân tộc
+                Container(
+                  height: 80.0,
+                  child: DropdownButtonFormField<String>(
+                    decoration: InputDecoration(
+                      labelText: 'Dân tộc',
+                    ),
+                    isExpanded: true,
+                    value: selectedEthnicity,
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        selectedEthnicity = newValue;
+                      });
+                    },
+                    items: Ethnicity.ethnicity
+                        .map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                  ),
+                ),
+                // TextField - Số điện thoại
                 TextField(
+                  keyboardType: TextInputType.phone,
                   controller: userPhone,
                   decoration: InputDecoration(
                     labelText: 'Số điện thoại (*)',
                   ),
                 ),
+                // TextField - Địa chỉ
                 TextField(
                   controller: userAddress,
                   decoration: InputDecoration(
                     labelText: 'Địa chỉ (*)',
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 20),
-                  child: SizedBox(
-                    width: double.infinity,
-                    height: 50,
-                    child: ElevatedButton(
-                      onPressed: onCreateInfoPressed,
-                      style: ElevatedButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10))),
-                      child: Text(
-                        "TẠO HỒ SƠ",
-                        style: TextStyle(fontSize: 15),
+                const SizedBox(height: 20.0),
+                SizedBox(
+                  width: double.infinity,
+                  height: 50.0,
+                  child: ElevatedButton(
+                    onPressed: onCreateInfoPressed,
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
                       ),
+                    ),
+                    child: Text(
+                      "TẠO HỒ SƠ",
+                      style: TextStyle(fontSize: 15.0),
                     ),
                   ),
                 ),
@@ -286,6 +274,16 @@ class _NewPatientState extends State<NewPatient> {
   }
 
   Future<void> onCreateInfoPressed() async {
+    if (userFullName.text.isEmpty ||
+        selectedDob == null ||
+        selectedGender == null ||
+        userPhone.text.isEmpty ||
+        userAddress.text.isEmpty ||
+        selectedJob == null ||
+        selectedEthnicity == null) {
+      showSnackbar('Vui lòng điền đầy đủ thông tin.', false);
+      return;
+    }
     final userDob = selectedDob.toString();
     final int? userID = UserManager().userId;
     var response = await apiService.createPatient(

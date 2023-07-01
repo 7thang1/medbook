@@ -1,5 +1,6 @@
 class Job {
   static const List<String> job = [
+    'Sinh viên',
     'Giáo viên',
     'Bác sĩ',
     'Kỹ sư',

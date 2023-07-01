@@ -120,7 +120,7 @@ class _ListViewPageState extends State<ListViewPage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => PatientInfo(),
+                  builder: (context) => PatientInfo(patient: patient),
                 ),
               );
             },
