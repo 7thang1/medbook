@@ -4,9 +4,7 @@ import 'package:medbook/Screens/home.dart';
 import 'package:medbook/Screens/newinfo.dart';
 import 'package:medbook/Screens/patientinfo.dart';
 import 'package:medbook/Service/PatientServices.dart';
-import 'package:medbook/Service/UserServices.dart';
 import 'package:medbook/Service/UserManager.dart';
-import 'package:medbook/navbar.dart';
 
 class ListInfo extends StatelessWidget {
   @override

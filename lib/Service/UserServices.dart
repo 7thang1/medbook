@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:medbook/Service/UserManager.dart';
+import 'package:medbook/Model/User.dart';
 
-class APIService {
+class UserServices {
   static const String baseUrl = 'http://20.24.151.181:8080/api';
 
   Future<Map<String, dynamic>> createPatient(
@@ -64,48 +64,62 @@ class APIService {
     }
   }
 
-  Future<Map<String, dynamic>> deletePatientInfo(
-      int patient_id, int user_id) async {
-    final url = '$baseUrl/patient/delete';
-    final body = jsonEncode({
-      'user_id': user_id,
-      'patient_id': patient_id,
-    });
-    final headers = {'Content-Type': 'application/json'};
+  Future<List<User>> getUserByUsername(String user_name) async {
+    final response = await http.get(Uri.parse(
+        'http://20.24.151.181:8080/api/user/get/username/$user_name'));
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      final Userinfo = data['DT'] as List<dynamic>;
+      return Userinfo.map((item) => User.fromJson(item)).toList();
+    } else {
+      throw Exception('Không thể tải thông tin');
+    }
+  }
 
-    try {
-      final response = await http.get(Uri.parse(url));
+  Future<void> resetPassword(int userId, String newPassword) async {
+    final apiUrl = 'http://20.24.151.181:8080/api/user/resetpassword';
 
-      if (response.statusCode == 201) {
-        final responseData = jsonDecode(response.body);
-        final errorCode = responseData['EC'];
+    final requestBody = {
+      'user_id': userId,
+      'reset_password': newPassword,
+    };
 
-        if (errorCode == 1) {
-          // Login success
-          return {
-            'success': true,
-            'message': 'Tạo hồ sơ thành công',
-          };
-        } else {
-          // Login failed
-          return {
-            'success': false,
-            'message': 'Tạo hồ sơ thất bại',
-          };
-        }
-      } else {
-        // Handle non-200 status code
-        return {
-          'success': false,
-          'message': 'Đã xảy ra lỗi 1',
-        };
-      }
-    } catch (e) {
-      // Handle network or server errors
-      return {
-        'success': false,
-        'message': 'Đã xảy ra lỗi ',
-      };
+    final response = await http.put(
+      Uri.parse(apiUrl),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(requestBody),
+    );
+
+    if (response.statusCode == 200) {
+      print('Đặt lại mật khẩu thành công');
+    } else {
+      print('Reset password failed: ${response.statusCode}');
+      print('Response body: ${response.body}');
+    }
+  }
+
+  Future<void> updateUserInfo(
+      int userId, String userName, String userPhone, String userMail) async {
+    final apiUrl = 'http://20.24.151.181:8080/api/user/updateuserinfor';
+
+    final requestBody = {
+      'user_id': userId,
+      'user_name': userName,
+      'user_phone': userPhone,
+      'user_mail': userMail,
+    };
+
+    final response = await http.put(
+      Uri.parse(apiUrl),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(requestBody),
+    );
+
+    if (response.statusCode == 200) {
+      print('Cập nhật thông tin thành công');
+    } else {
+      print('Reset password failed: ${response.statusCode}');
+      print('Response body: ${response.body}');
     }
   }
 }

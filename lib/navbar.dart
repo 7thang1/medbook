@@ -21,15 +21,18 @@ class NavBar extends StatelessWidget {
       child: ListView(
         children: [
           UserAccountsDrawerHeader(
-            accountName: Text("Vwng"),
-            accountEmail: Text("20522171@gm.uit.edu.vn"),
-            currentAccountPicture: CircleAvatar(
-              child: ClipOval(
-                child: Image.asset(
-                  'assets/avatar.png',
-                  fit: BoxFit.cover,
-                  width: 90,
-                  height: 90,
+            accountName: Text("Nguyễn Văn A"),
+            accountEmail: Text("example@gmail.com"),
+            currentAccountPicture: GestureDetector(
+              onTap: () => onUserInfoPressed(context),
+              child: CircleAvatar(
+                child: ClipOval(
+                  child: Image.asset(
+                    'assets/avatar.png',
+                    fit: BoxFit.cover,
+                    width: 90,
+                    height: 90,
+                  ),
                 ),
               ),
             ),
@@ -87,15 +90,15 @@ class NavBar extends StatelessWidget {
             height: 1,
             color: Colors.grey,
           ),
-          ListTile(
-              leading: SizedBox(
-                width: 24,
-                height: 24,
-                child: Image.asset('assets/settings.png'),
-              ),
-              title: Text("Cài đặt",
-                  style: TextStyle(fontSize: 13.5, color: Colors.black)),
-              onTap: () => onSettingPressed(context)),
+          // ListTile(
+          //     leading: SizedBox(
+          //       width: 24,
+          //       height: 24,
+          //       child: Image.asset('assets/settings.png'),
+          //     ),
+          //     title: Text("Cài đặt",
+          //         style: TextStyle(fontSize: 13.5, color: Colors.black)),
+          //     onTap: () => onSettingPressed(context)),
           ListTile(
             leading: SizedBox(
               width: 24,
@@ -273,4 +276,6 @@ class NavBar extends StatelessWidget {
       ),
     );
   }
+
+  void onUserInfoPressed(BuildContext context) {}
 }

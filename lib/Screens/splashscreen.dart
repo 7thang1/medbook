@@ -1,5 +1,3 @@
-// ignore_for_file: prefer_const_constructors, avoid_unnecessary_containers, use_build_context_synchronously, unused_import
-
 import 'package:flutter/material.dart';
 import 'package:medbook/Screens/login.dart';
 import 'package:medbook/main.dart';
@@ -27,16 +25,16 @@ class _SplashState extends State<Splash> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Center(
-      child: Container(
-        child: Text(
-          'Splash Screen',
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(
+                'assets/LOG5.3wihtoutBG.png'), // Đường dẫn đến hình ảnh của bạn
+            SizedBox(height: 16),
+          ],
         ),
       ),
-    ));
+    );
   }
 }

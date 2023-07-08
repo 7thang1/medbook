@@ -19,8 +19,6 @@ class _RegisterState extends State<Register> {
   TextEditingController userPassword = TextEditingController();
   TextEditingController userFullName = TextEditingController();
   TextEditingController userRePassword = TextEditingController();
-  var _userInvalid = false;
-  var _passInvalid = false;
 
   GlobalKey<ScaffoldMessengerState> _scaffoldMessengerKey =
       new GlobalKey<ScaffoldMessengerState>();
@@ -275,36 +273,24 @@ class _RegisterState extends State<Register> {
     if (userName.text.length < 5 ||
         userName.text.length > 20 ||
         userName.text.contains(" ")) {
-      setState(() {
-        _userInvalid = true;
-      });
+      setState(() {});
       isValid = false;
     } else {
-      setState(() {
-        _userInvalid = false;
-      });
+      setState(() {});
     }
 
     if (userPassword.text.length < 5 || userPassword.text.length > 20) {
-      setState(() {
-        _passInvalid = true;
-      });
+      setState(() {});
       isValid = false;
     } else {
-      setState(() {
-        _passInvalid = false;
-      });
+      setState(() {});
     }
 
     if (userRePassword.text != userPassword.text) {
-      setState(() {
-        _passInvalid = true;
-      });
+      setState(() {});
       isValid = false;
     } else {
-      setState(() {
-        _passInvalid = false;
-      });
+      setState(() {});
     }
 
     if (isValid) {

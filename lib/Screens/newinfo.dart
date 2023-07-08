@@ -47,12 +47,12 @@ class _NewPatientState extends State<NewPatient> {
   String? selectedGender;
   String? selectedJob;
   String? selectedEthnicity;
-  APIService apiService = APIService();
+  UserServices apiService = UserServices();
   final userFullName = TextEditingController();
   final userPhone = TextEditingController();
   final userAddress = TextEditingController();
 
-  final List<String> gender = ['Male', 'Female', 'Other'];
+  final List<String> gender = ['Nam', 'Nữ', 'Khác'];
 
   final List<String> days =
       List.generate(31, (index) => (index + 1).toString());
@@ -290,7 +290,7 @@ class _NewPatientState extends State<NewPatient> {
         userID!,
         userFullName.text,
         userDob,
-        selectedGender.toString(),
+        _convertGender(selectedGender).toString(),
         userPhone.text,
         userAddress.text,
         selectedJob.toString(),
@@ -335,5 +335,14 @@ class _NewPatientState extends State<NewPatient> {
     } else {
       selectedDob = null;
     }
+  }
+
+  String? _convertGender(String? gender) {
+    if (gender == 'Nam') {
+      return 'Male';
+    } else if (gender == 'Nữ') {
+      return 'Female';
+    }
+    return 'Other';
   }
 }

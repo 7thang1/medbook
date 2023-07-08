@@ -1,9 +1,7 @@
-import 'package:flash/flash_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:medbook/Model/Patient.dart';
-import 'package:medbook/Service/UserManager.dart';
-import 'package:medbook/Service/UserServices.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:medbook/Screens/booking_by_date.dart';
+import 'package:medbook/Screens/booking_by_doctor.dart';
 
 class PatientInfo extends StatelessWidget {
   final Patient patient;
@@ -83,7 +81,8 @@ class PatientInfo extends StatelessWidget {
               _buildDivider(),
               _buildDateOfBirthItem('Ngày sinh', patient.dateOfBirth),
               _buildDivider(),
-              _buildInfoItem('Giới tính', patient.gender ?? 'Chưa cập nhật'),
+              _buildInfoItem('Giới tính',
+                  _convertGender(patient.gender) ?? 'Chưa cập nhật'),
               _buildDivider(),
               _buildInfoItem(
                   'Số điện thoại', patient.phoneNumber ?? 'Chưa cập nhật'),
@@ -100,6 +99,44 @@ class PatientInfo extends StatelessWidget {
           ),
         ),
       ),
+      floatingActionButton: Align(
+        alignment: Alignment.bottomCenter,
+        child: Container(
+          margin: EdgeInsets.only(left: 26),
+          child: ElevatedButton(
+            onPressed: () {
+              showBookingOptions(context);
+            },
+            child: Container(
+              height: 50,
+              padding: EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset('assets/stethoscope.png', width: 24, height: 24),
+                  SizedBox(width: 8),
+                  Text(
+                    'Đặt lịch khám',
+                    style: TextStyle(fontSize: 18),
+                  ),
+                ],
+              ),
+            ),
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+              shape: MaterialStateProperty.all<OutlinedBorder>(
+                RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(24),
+                ),
+              ),
+              elevation: MaterialStateProperty.all<double>(4),
+              textStyle: MaterialStateProperty.all<TextStyle>(
+                TextStyle(color: Colors.white),
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 
@@ -113,8 +150,8 @@ class PatientInfo extends StatelessWidget {
             title,
             style: TextStyle(
               fontWeight: FontWeight.bold,
-              color: Colors.blue, // Màu chữ là màu xanh lam
-              fontSize: 16, // Kích thước chữ là 16
+              color: Colors.blue,
+              fontSize: 16,
             ),
           ),
           SizedBox(height: 4),
@@ -156,4 +193,80 @@ class PatientInfo extends StatelessWidget {
   void editPatient(BuildContext context) {}
 
   void deletePatient(BuildContext context) {}
+  void showBookingOptions(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(24),
+        ),
+      ),
+      builder: (BuildContext context) {
+        return Container(
+          padding: EdgeInsets.all(16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                onTap: () {
+                  Navigator.of(context).pop();
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              BookingByDoctor(patient: patient)));
+                },
+                leading: Icon(
+                  Icons.person,
+                  color: Colors.blue,
+                  size: 32,
+                ),
+                title: Text(
+                  'Đặt lịch theo bác sĩ',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                    color: Colors.blue,
+                  ),
+                ),
+              ),
+              SizedBox(height: 16),
+              ListTile(
+                onTap: () {
+                  Navigator.of(context).pop();
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              BookingByDates(patient: patient)));
+                },
+                leading: Icon(
+                  Icons.calendar_today,
+                  color: Colors.blue,
+                  size: 32,
+                ),
+                title: Text(
+                  'Đặt lịch theo ngày',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                    color: Colors.blue,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  String? _convertGender(String? gender) {
+    if (gender == 'Male') {
+      return 'Nam';
+    } else if (gender == 'Female') {
+      return 'Nữ';
+    }
+    return 'Khác';
+  }
 }

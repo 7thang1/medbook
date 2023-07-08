@@ -32,17 +32,17 @@ class Patient {
     ethnicity = json['ethnicity'];
   }
 
-  // Map<String, dynamic> toJson() {
-  //   final Map<String, dynamic> data = new Map<String, dynamic>();
-  //   data['profile_id'] = this.profileId;
-  //   data['user_id'] = this.userId;
-  //   data['full_name'] = this.fullName;
-  //   data['date_of_birth'] = this.dateOfBirth;
-  //   data['gender'] = this.gender;
-  //   data['phone_number'] = this.phoneNumber;
-  //   data['address'] = this.address;
-  //   data['occupation'] = this.occupation;
-  //   data['ethnicity'] = this.ethnicity;
-  //   return data;
-  // }
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['profile_id'] = this.profileId;
+    data['user_id'] = this.userId;
+    data['full_name'] = this.fullName;
+    data['date_of_birth'] = this.dateOfBirth;
+    data['gender'] = this.gender;
+    data['phone_number'] = this.phoneNumber;
+    data['address'] = this.address;
+    data['occupation'] = this.occupation;
+    data['ethnicity'] = this.ethnicity;
+    return data;
+  }
 }

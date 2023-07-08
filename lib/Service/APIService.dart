@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:medbook/Service/UserManager.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class APIService {
   static const String baseUrl = 'http://20.24.151.181:8080/api';
