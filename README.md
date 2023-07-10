@@ -11,7 +11,7 @@ This project is a starting point for a Flutter application.
 ![Postman](https://img.shields.io/badge/Postman-FF6C37.svg?style=for-the-badge&logo=Postman&logoColor=white)
 ![Visual%20Studio%20Code](https://img.shields.io/badge/Visual%20Studio%20Code-007ACC.svg?style=for-the-badge&logo=Visual-Studio-Code&logoColor=white)
 ## Backend
-The backend for this app base on Expressjs and MySQL, <a href="[http://stackoverflow.com](https://github.com/7thang1/medbook_backend)" target="_blank">access here to direct it</a>
+The backend for this app base on Expressjs and MySQL, [access here to direct it](https://github.com/7thang1/medbook_backend)
 ## Member
 1. Thinh Thi Tan    - 20521968 - Owner of Project
 2. Vuong Huynh Viet - 20522171 - Co-Owners
